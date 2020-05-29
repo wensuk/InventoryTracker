@@ -1,0 +1,87 @@
+{% extends "inventory/layout.html" %}
+
+{% block title %}
+    Order Detail
+{% endblock %}
+
+
+{% block body %}
+    <h1>Order Detail</h1>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      {% endfor %}
+    </div> 
+    {% endif %}
+
+    {% if order %}
+    <div id='bill-detail'>
+      <form id='bill' action="{% url 'order_update' order.invoice %}" method="post">
+        {% csrf_token %}
+      <div class="row">
+          <div class="col-lg-5 col-md-5 col-sm-8">Date<input type="date" class="form-control" name='date' value="{{ order.date }}" required></div>           
+          <div class="col-lg-5 col-md-5 col-sm-8">Customer Name<input type="text" class="form-control" name='customer' value="{{ order.customer }}" required></div>
+          <div class="col-lg-5 col-md-5 col-sm-8">Order Number<input class="form-control" type="text" value="{{ order.invoice }}" readonly></div>           
+          <div class="col-lg-5 col-md-5 col-sm-8">Reference<input type="text" class="form-control" name='ref' value="{{ order.reference }}"></div>           
+        </div>
+
+        <table class="table" style="margin: 30px auto; width: 90%;">
+          <thead>
+            <tr>
+              <th scope="col" style="width:50%">Product</th>
+              <th scope="col" style="width:15%">Rate</th>
+              <th scope="col" style="width:15%">Quantity</th>
+              <th scope="col" style="width:15%">Total</th>
+            </tr>
+          </thead>
+            <tbody>
+            {% if records %}
+              {% for record in records %}
+              <tr>
+                <td>{{ record.name }}</td>
+                <td><input type="text" class="form-control" name='rate' value="{{ record.rate }}"></td>
+                <td><input type="number" class="form-control" name='quan' value="{{ record.quantity }}"></td>
+                <td><input type="text" class="form-control" value="{{ record.total }}" name='total'></td>
+              </tr>
+              {% endfor %}
+            {% endif %}
+            </tbody>
+          </table>
+    {% endif %}
+
+    <input class="btn btn-primary" type="submit" value='Save' style="float:right; margin:30px; width:20%;">
+    </form>
+
+    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" style="margin:30px; width:20%; color:white;">Delete</button>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to Delete this Order?
+          </div>
+          <div class="modal-footer">
+            <form action="{% url 'order_delete' order.invoice %}" method="post">
+              {% csrf_token %}
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+{% endblock %}

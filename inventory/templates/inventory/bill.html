@@ -1,0 +1,138 @@
+{% extends "inventory/layout.html" %}
+
+{% block title %}
+    Bill Page
+{% endblock %}
+
+{% block script %}
+<script>
+function productsAdd() {
+  $("#tb").append(
+      "<tr>" +
+        "<td>" +
+        "<select class='custom-select' name='enter_bill' style='width:100%' required>" +
+        "<option selected>Select Product</option>" +
+                        "{% if products %}" + "{% for product in products %}" + 
+                            "<option value='{{ product.id }}'>" + "{{ product }}"+ "</option>"+
+                          "{% endfor %}" +
+                        "{% endif %}"+
+                      "</select>"+ "</td>" +
+        "<td>" + "<input type='text' class='form-control' placeholder='Rate' name='rate' required>" + "</td>" +
+        "<td>" + "<input type='text' class='form-control' placeholder='Quantity' name='quan' required>" + "</td>" +
+        "<td>" + "<input type='text' class='form-control' placeholder='Total' name='total' required>" + "</td>" +
+      "</tr>"
+  );
+  return false;
+}
+
+</script>
+{% endblock %}
+
+{% block body %}
+    <h1>Bill</h1>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      {% endfor %}
+    </div> 
+    {% endif %}
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#searchBill" role="tab" aria-controls="home" aria-selected="true">Search</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#addBill" role="tab" aria-controls="profile" aria-selected="false">Add</a>
+        </li>
+  
+      </ul>
+      <div class="tab-content" id="myTabContent">
+  
+        <div class="tab-pane fade show active" id="searchBill" role="tabpaillnel" aria-labelledby="home-tab">
+          <form class="form-inline" action="{% url 'searchBill' %}" method='post'>
+            {% csrf_token %}
+            <select class='custom-select' id="searchby" name="searchby" style="margin-right:5px">
+              <option value="Date">Date</option>
+              <option value="Bill">Bill Number</option>
+              <option value="Company">Company Name</option>
+              <input type="text" class="form-control" placeholder="yyyy-mm-dd or Bill Number or Company Name" name="search" required>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+
+          {% if bills %}
+          <table class="table" id="product-table">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Bill Number</th>
+                <th scope="col">Company</th>
+                <th scope="col">Reference</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for bill in bills %}
+              <tr>
+                <td>{{ bill.date }}</td>
+                <td><a href="{% url 'bill_detail' bill.invoice %}">{{ bill.invoice }}</a></td>
+                <td>{{ bill.company }}</td>
+                <td>{{ bill.reference }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+        </div>
+  
+        <div class="tab-pane fade" id="addBill" rillole="tabpanel" aria-labelledby="profile-tab">
+          <h2>Add Bill</h2>
+          <form id='bill' action="{% url 'addBill' %}" method='post'>
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-lg-5 col-md-5 col-sm-8">Date<input type="date" class="form-control" name='date' required></div>           
+              <div class="col-lg-5 col-md-5 col-sm-8">Company Name<input type="text" class="form-control" name='company' placeholder="Company" id='bill-form' required></div>
+              <div class="col-lg-5 col-md-5 col-sm-8">Bill Number<input type="text" class="form-control" name='invoice' placeholder="Bill Number" id='bill-form' required></div>           
+              <div class="col-lg-5 col-md-5 col-sm-8">Reference<input type="text" class="form-control" name='ref' placeholder="Reference" id='bill-form'></div>           
+            </div>
+
+              <table class="table" style="margin:20px auto">
+                <thead>
+                  <tr>
+                    <th scope="col" style="width:50%">Product</th>
+                    <th scope="col" style="width:15%">Rate</th>
+                    <th scope="col" style="width:15%">Quantity</th>
+                    <th scope="col" style="width:15%">Total</th>
+                  </tr>
+                </thead>
+                  <tbody id="tb">
+                    <tr>
+                      <td>
+                        <select class='custom-select' name="enter_bill" style="width:100%" required>
+                        <option selected>Select Product</option>
+                        {% if products %}           
+                          {% for product in products %}
+                            <option value="{{ product.id }}">{{ product }}</option>
+                          {% endfor %}
+                        {% endif %}
+                      </select>
+                    </td>
+                      <td><input type="text" class="form-control" placeholder="Rate" name='rate' required></td>
+                      <td><input type="number" class="form-control" placeholder="Quantity" name='quan' required></td>
+                      <td><input type="text" class="form-control" placeholder="Total" name='total' required></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <a class="btn btn-outline-secondary" id="addLine" style="margin-left:30px" onclick=productsAdd()>Add Line</a>
+
+                <input class="btn btn-primary" type="submit" value='Submit' style="float:right; margin:30px; width:30%;">
+          </form>
+        </div>
+        </div>
+  
+      </div>
+  
+  {% endblock %}

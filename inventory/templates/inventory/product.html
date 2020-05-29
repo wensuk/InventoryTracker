@@ -1,0 +1,116 @@
+{% extends "inventory/layout.html" %}
+
+{% block title %}
+    Product Page
+{% endblock %}
+
+
+{% block body %}
+    <h1>Product</h1>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      {% endfor %}
+    </div> 
+    {% endif %}
+
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#searchProduct" role="tab" aria-controls="home" aria-selected="true">Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#addProduct" role="tab" aria-controls="profile" aria-selected="false">Add</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+
+      <div class="tab-pane fade show active" id="searchProduct" role="tabpanel" aria-labelledby="home-tab">
+        <form class="form-inline" action="{% url 'searchProduct' %}" method='post'>
+          {% csrf_token %}
+          <select class='custom-select' id="searchby" name="searchby" style="margin-right:5px">
+            <option value="Category">Category</option>
+            <option value="Brand">Brand</option>
+            <option value="Item">Item</option>
+            <input type="text" class="form-control" placeholder="Search" name="search" required>
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+
+        {% if products %}
+        <table class="table" id="product-table">
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Brand</th>
+              <th scope="col">Item</th>
+              <th scope="col">Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+            <tr>
+              <td>{{ product.category }}</td>
+              <td>{{ product.brand }}</td>
+              <td>{{ product.item }}</td>
+              <td>{{ product.quantity }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+
+
+
+      <div class="tab-pane fade" id="addProduct" role="tabpanel" aria-labelledby="profile-tab"> 
+
+        <h2>New Product</h2>
+        <div id="select-form">
+        <form action="{% url 'addProduct' %}" method="post">
+          {% csrf_token %}
+          <div class='select-p'>
+            <div>
+            <label>Category:</label>
+            <select class="custom-select" id="category" name="category" >
+              <option selected>Select</option>
+              {% for category in categorys %}
+              <option value="{{ category.name }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label>Brand:</label>
+            <select class="custom-select" id="brand" name="brand">
+              <option selected>Select</option>
+              {% for brand in brands %}
+              <option value="{{ brand.name }}">{{ brand.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label>Item:</label> 
+            <select class="custom-select" id="item" name="item">
+              <option selected>Select</option>
+              {% for item in items %}
+              <option value="{{ item.name }}">{{ item.name }}</option>
+              {% endfor %}
+            </select>
+            </div>
+          </div>
+
+            <input type="submit" class="btn btn-primary" value="Add" style="font-size:30px">
+        </form>
+      </div>
+      </div>
+
+    </div>
+
+{% endblock %}

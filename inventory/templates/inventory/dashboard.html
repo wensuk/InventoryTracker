@@ -1,0 +1,104 @@
+{% extends "inventory/layout.html" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+
+{% block body %}
+    <h1>Dashboard</h1>
+
+    <hr>
+
+    <h2>Recent Activity</h2>
+
+    <div class='row' id='dash'>
+
+    {% if product %}
+    <div class="col sm-10">   
+        <div class="card text-center">
+        <div class="card-body">    
+          <h5 class="card-title">New Product</h5>
+          <p class="card-text">
+            Category: {{ product.category }}
+            <br>
+            Brand: {{ product.brand }}
+            <br>
+            Item: {{ product.item }}
+            <br>
+          </p>
+        </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col sm-10">   
+      <div class="card text-center">
+      <div class="card-body">    
+        <h5 class="card-title">New Product</h5>
+        <p class="card-text">
+          No New Product
+        </p>
+      </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+    {% if bill %}
+    <div class="col sm-10">   
+        <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">New Bill</h5>
+          <p class="card-text">
+            <a href="{% url 'bill_detail' bill.invoice %}">Bill Number: {{ bill.invoice }}</a>
+            <br>
+            Date: {{ bill.date }}
+            <br>
+            Company: {{ bill.company }}
+          </p>
+        </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col sm-10">   
+      <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">New Bill</h5>
+        <p class="card-text">
+          No New Bill
+        </p>
+      </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+    {% if order %}
+    <div class="col sm-10">
+        <div class="card text-center">
+        <div class="card-body">    
+          <h5 class="card-title">New Order</h5>
+          <p class="card-text">
+            <a href="{% url 'order_detail' order.invoice %}">Order Number: {{ order.invoice }}</a>
+            <br>
+            Date: {{ order.date }}
+            <br>
+            Customer: {{ order.customer }}
+          </p>
+        </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col sm-10">
+      <div class="card text-center">
+      <div class="card-body">    
+        <h5 class="card-title">New Order</h5>
+        <p class="card-text">
+          No New Order
+        </p>
+      </div>
+      </div>
+    </div>
+    {% endif %}
+ 
+{% endblock %}

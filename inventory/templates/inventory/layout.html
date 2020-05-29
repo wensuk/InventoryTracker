@@ -1,0 +1,49 @@
+  {% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'inventory/index.css' %}"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+        {% block script %}
+        {% endblock %}
+    </head>
+
+    <body>
+    
+        {% block heading %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id='nav-bar'>
+            <a class="navbar-brand" href="{% url 'index' %}">Inventory Management System</a>
+            {% block nav %}
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav" id='myTab'>
+                <a class="nav-item nav-link" href="{% url 'dashboard' %}" role="tab">Dashboard <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="{% url 'product' %}" role="tab">Product</a>
+                <a class="nav-item nav-link" href="{% url 'bill' %}" role="tab">Bill</a>
+                <a class="nav-item nav-link" href="{% url 'order' %}" role="tab">Order</a>
+                </div>
+            </div>
+
+            <div>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+            {% endblock %}
+        </nav>
+        {% endblock %}
+
+        {% block body %}
+        {% endblock %}
+    </body>
+
+</html>
